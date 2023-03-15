@@ -1,4 +1,6 @@
 # global variable which holds Task objects
+import datetime
+
 global tasklist
 tasklist=[]
 # global variable which hold the possible inputs for a user stopping
@@ -13,7 +15,8 @@ class Task:
         self.duedate = duedate
 
     def __str__(self):
-        return f"{self.subject} - {self.name} | {self.duedate}"
+        date = self.duedate.strftime("%m/%d/%Y")
+        return f"{self.subject} - {self.name} | {date}\n"
 
 
 # adds Task(s) to tasklist
@@ -23,7 +26,16 @@ def add():
         name = input("Enter the name of the Task: ")
         subject = input("Enter the subject of the Task: ")
         duedate = input("Enter the duedate of the Task: ")
-        task = Task(name,subject,duedate+"\n")
+        try:
+            try:
+                #tries to read input in YYYY/
+                duedate = datetime.datetime(int(duedate[0:duedate.index('/')]),int(duedate[duedate.index('/')+1:duedate.index('/',5)]),int(duedate[duedate.index('/',5)+1:len(duedate)]))
+            except:
+                #defaults to current year if year isn't provided
+                duedate = datetime.datetime(datetime.date.today().year,int(duedate[0:duedate.index('/')]),int(duedate[duedate.index('/')+1:len(duedate)]))
+        except:
+            duedate = input("Improper format - Enter a date in format MM/DD or YYYY/MM/DD")
+        task = Task(name,subject,duedate)
         tasklist.append(task)
         response = input("Would you like to add another? y/n: ")
 
@@ -38,7 +50,7 @@ def remove():
         tasklist.remove(tasklist[int(delete)-1])
 
 # sorts tasks by due date in tasklist
-def sortByDueDate():
+def sortTasks():
 
     return
 
@@ -58,6 +70,7 @@ def readFile():
         name = x[x.index(' - ') + 3:x.index(' | ')]
         subject = x[0:x.index(' - ')]
         duedate = x[x.index(' | ') + 3:len(x)]
+        duedate = datetime.datetime(int(duedate[duedate.index('/', 5) + 1:len(duedate)]),int(duedate[0:duedate.index('/')]),int(duedate[duedate.index('/') + 1:duedate.index('/', 5)]))
         task = Task(name, subject, duedate)
         tasklist.append(task)
 
