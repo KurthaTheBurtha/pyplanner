@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CSPProject.iml" filepath="$PROJECT_DIR$/.idea/CSPProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pyplanner.iml" filepath="$PROJECT_DIR$/.idea/pyplanner.iml" />
     </modules>
   </component>
 </project>
