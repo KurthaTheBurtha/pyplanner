@@ -1,23 +1,22 @@
-# global variable which holds Task objects
 import datetime
 
+# global variable which holds Task objects
 global tasklist
 tasklist = []
 # global variable which hold the possible inputs for a user stopping
 global no
-no = ["no", "n", "", "stop", "break"]
+no = ["no", "n", "", "stop", "break","over","cease","terminate"]
 
 
-# class to hold information about an assignment
+# Task class to hold information about an assignment
 class Task:
-
+    #constructor to create Task objects
     def __init__(self, name, subject, duedate):
         self.name = name
         self.subject = subject
         self.duedate = duedate
 
-    def getdate(self):
-        return self.duedate
+    #returns the Task in a printable string format
     def __str__(self):
         date = self.duedate.strftime("%m/%d/%Y")
         return f"{self.subject} - {self.name} | {date}\n"
@@ -25,6 +24,7 @@ class Task:
 
 # adds Task(s) to tasklist
 def add():
+    print("Enter duedates in format \"MM/DD\" or \"YYYY/MM/DD\"")
     response = " "
     while not no.__contains__(response.lower()):
         name = input("Enter the name of the Task: ")
@@ -60,25 +60,21 @@ def remove():
 
 # sorts tasks by due date in tasklist
 def sortTasks():
-    quickSort(tasklist,0,len(tasklist))
+    dates = []
+    for i in range(len(tasklist)):
+        dates.append(tasklist[i].duedate)
+    selectionSort(dates)
 
 
-def partition(array, low, high):
-    pivot = array[high]
-    i = low - 1
-    for j in range(low, high):
-        if array[j] <= pivot:
-            i = i + 1
-            (array[i], array[j]) = (array[high], array[i + 1])
-    (array[i + 1], array[high]) = (array[high, array[i + 1]])
-    return i + 1
-
-
-def quickSort(array, low, high):
-    if low < high:
-        pi = partition(array, low, high)
-        quickSort(array, low, pi - 1)
-        quickSort(array, pi + 1, high)
+# sorts the dates by due date and switches tasks in tasklist using a minimum selection sort
+def selectionSort(arr):
+    for x in range(len(arr)):
+        min = x
+        for i in range(x + 1, len(arr)):
+            if arr[i] < arr[min]:
+                min = i
+        arr[x], arr[min] = arr[min], arr[x]
+        tasklist[x], tasklist[min] = tasklist[min], tasklist[x]
 
 
 # clears all tasks in tasklist
@@ -134,6 +130,7 @@ while True:
     elif response == "2":
         remove()
     elif response == "3":
+        sortTasks()
         printList()
     elif response == "4":
         clearTasks()
