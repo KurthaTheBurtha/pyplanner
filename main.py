@@ -1,49 +1,48 @@
-# global variable which holds Task objects
 import datetime
 
+# global variable which holds Task objects
 global tasklist
 tasklist = []
 # global variable which hold the possible inputs for a user stopping
 global no
-no = ["no", "n", "", "stop", "break"]
+no = ["no", "n", "", "stop", "break","over","cease","terminate"]
 
 
-# class to hold information about an assignment
+# Task class to hold information about an assignment
 class Task:
+    #constructor to create Task objects
     def __init__(self, name, subject, duedate):
         self.name = name
         self.subject = subject
         self.duedate = duedate
 
+    #returns the Task in a printable string format
     def __str__(self):
-        return f"{self.subject} - {self.name} | {self.duedate}"
-
-
-# class to hold information about a Date
-class Date:
-
-    def __init__(self, month, day, year):
-        self.month = month
-        self.day = day
-        self.year = year
-
-    def __str__(self):
-        return f"{self.month}/{self.day}/{self.year}"
+        date = self.duedate.strftime("%m/%d/%Y")
+        return f"{self.subject} - {self.name} | {date}\n"
 
 
 # adds Task(s) to tasklist
 def add():
+    print("Enter duedates in format \"MM/DD\" or \"YYYY/MM/DD\"")
     response = " "
     while not no.__contains__(response.lower()):
         name = input("Enter the name of the Task: ")
         subject = input("Enter the subject of the Task: ")
-        month = input("Enter the month of the Task: ")
-        day = input("Enter the day the Task is due: ")
-        year = input("Enter the year the Task is due, press Enter if the year is this year: ")
-        if year == '':
-            year = datetime.datetime.now().strftime("%Y")
-        duedate = Date(month, day, year)
-        task = Task(name, subject, duedate.__str__() + "\n")
+        duedate = input("Enter the duedate of the Task: ")
+        try:
+            try:
+                # tries to read input in YYYY/
+                duedate = datetime.datetime(int(duedate[0:duedate.index('/')]),
+                                            int(duedate[duedate.index('/') + 1:duedate.index('/', 5)]),
+                                            int(duedate[duedate.index('/', 5) + 1:len(duedate)]))
+            except:
+                # defaults to current year if year isn't provided
+                duedate = datetime.datetime(datetime.date.today().year, int(duedate[0:duedate.index('/')]),
+                                            int(duedate[duedate.index('/') + 1:len(duedate)]))
+        except:
+            duedate = input("Improper format - Enter a date in format MM/DD or YYYY/MM/DD")
+        task = Task(name, subject, duedate)
         tasklist.append(task)
         response = input("Would you like to add another? y/n: ")
 
@@ -59,27 +58,23 @@ def remove():
         tasklist.remove(tasklist[int(delete) - 1])
 
 
-# returns a boolean value that is whether date1 comes before date2 in the Gregorian calendar
-def isEarlier(date1, date2):
-    if date2.year > date1.year:
-        return True
-    elif date2.year < date1.year:
-        return False
-    else:
-        if date2.month > date1.month:
-            return True
-        elif date2.month < date1.month:
-            return False
-        else:
-            if date2.day > date1.day:
-                return True
-            else:
-                return False
-
-
 # sorts tasks by due date in tasklist
-def sortByDueDate():
-    return
+def sortTasks():
+    dates = []
+    for i in range(len(tasklist)):
+        dates.append(tasklist[i].duedate)
+    selectionSort(dates)
+
+
+# sorts the dates by due date and switches tasks in tasklist using a minimum selection sort
+def selectionSort(arr):
+    for x in range(len(arr)):
+        min = x
+        for i in range(x + 1, len(arr)):
+            if arr[i] < arr[min]:
+                min = i
+        arr[x], arr[min] = arr[min], arr[x]
+        tasklist[x], tasklist[min] = tasklist[min], tasklist[x]
 
 
 # clears all tasks in tasklist
@@ -96,11 +91,11 @@ def readFile():
     for x in file:
         name = x[x.index(' - ') + 3:x.index(' | ')]
         subject = x[0:x.index(' - ')]
-        month = x[x.index(' | ') + 3:x.index("/")]
-        second = x.find("/", 3)
-        day = x[x.index("/") + 1:second]
-        year = x[second + 1:len(x)]
-        task = Task(name, subject, x)
+        duedate = x[x.index(' | ') + 3:len(x)]
+        duedate = datetime.datetime(int(duedate[duedate.index('/', 5) + 1:len(duedate)]),
+                                    int(duedate[0:duedate.index('/')]),
+                                    int(duedate[duedate.index('/') + 1:duedate.index('/', 5)]))
+        task = Task(name, subject, duedate)
         tasklist.append(task)
 
 
@@ -135,6 +130,7 @@ while True:
     elif response == "2":
         remove()
     elif response == "3":
+        sortTasks()
         printList()
     elif response == "4":
         clearTasks()

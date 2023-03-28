@@ -30,6 +30,9 @@ class Date:
         self.month = month
         self.day = day
         self.year = year
+
+        def getdate(self):
+            return self.duedate
     def __str__(self,month,day,year):
         return f"{self.month}/{self.day}/{self.year}"
 
