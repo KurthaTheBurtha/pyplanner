@@ -51,6 +51,7 @@ def add():
 def remove():
     while True:
         printList()
+        print()
         delete = input(
             "Which task would you like to remove? Enter the number of the task that you want to remove, \"no\" or Enter to stop: ")
         if no.__contains__(delete):
@@ -119,7 +120,7 @@ def printList():
 readFile()
 printList()
 print()
-# grab user input
+# grab user input until they enter a break prompt
 response = input(
     "What would you like to do? 1 - add a task | 2 - remove a task | 3 - view tasks | 4 - clear all tasks | Enter or stop to stop: ")
 while True:
@@ -128,6 +129,7 @@ while True:
     elif response == "1":
         add()
     elif response == "2":
+        sortTasks()
         remove()
     elif response == "3":
         sortTasks()
@@ -140,4 +142,5 @@ while True:
     response = input(
         "Would you like to do anything else? 1 - add a task | 2 - remove a task | 3 - view tasks | 4 - clear all tasks | Enter or stop to stop: ")
     print()
+# writes information to file "assignments"
 writeFile()
